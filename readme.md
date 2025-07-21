@@ -52,7 +52,7 @@ This project is a Django-based **Credit Approval System** built as part of an in
 
 ```bash
 docker compose up --build
-````
+```
 
 ### Test the app:
 
@@ -63,7 +63,7 @@ docker compose up
 Step2-->
 ```bash
 docker compose exec web python manage.py test
-
+```
 
 > This spins up Django, PostgreSQL, and Celery in separate containers.
 
