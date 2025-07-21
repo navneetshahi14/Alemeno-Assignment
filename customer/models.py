@@ -4,7 +4,7 @@ from django.db import models
 class Customers(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    phone_number = models.PositiveBigIntegerField(max_length=15, unique=True)
+    phone_number = models.PositiveBigIntegerField(unique=True)
     monthly_salary = models.PositiveBigIntegerField()
     approved_limit = models.PositiveBigIntegerField()
     current_debt = models.PositiveBigIntegerField()
