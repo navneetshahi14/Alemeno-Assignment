@@ -1,0 +1,62 @@
+
+services:
+  web:
+    build: .
+    command: gunicorn credit_system.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - ./data:/app/data 
+      - ./customer/data:/app/customer/data
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./customer/data:/app/customer/data
+
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6380:6379"
+
+  celery:
+    build: .
+    command: celery -A credit_system worker --loglevel=info
+    volumes:
+      - .:/app
+      - ./customer/data:/app/customer/data
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A credit_system beat --loglevel=info
+    volumes:
+      - .:/app
+      - ./customer/data:/app/customer/data
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
